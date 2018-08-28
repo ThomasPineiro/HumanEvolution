@@ -10,31 +10,57 @@ include 'partie.php';
 
 class Personnage extends BddHuman
 {
+    /**
+     * @var int
+     */
     protected $_espvie;
+    /**
+     * @var float|int
+     */
     protected $_croissance;
+    /**
+     * @var int
+     */
     protected $_taille;
+    /**
+     * @var bool
+     */
     protected $_homme;
+    /**
+     * @var int
+     */
     protected $_emplacement;
+    /**
+     * @var
+     */
     protected $_partie;
 
     /**
      * Personnage constructor.
-     * @param $_espvie
-     * @param $_croissance
-     * @param $_taille
-     * @param $_homme
      */
     public function __construct()
     {
         Parent::__construct();
+
+        // Query of the party id;
         $idPartie = $this->_bdd->prepare("SELECT max(id_partie) FROM partie");
         $idPartie->execute();
+
+        // Fetch of the data in an array
         $resultIdPartie = $idPartie->fetch();
         $this->_partie = $resultIdPartie[0];
+
+        // Randomization of the lifespan
         $this->_espvie = mt_rand(0, 100);
-        $_croissance = mt_rand(80, 120)/100;
+
+        //  Randomization of the value of growth factor
+        $_croissance = number_format(mt_rand(80, 120)/100,  2, '.', '');
         $this->_croissance = $_croissance;
+
+        //  Randomization of the value of the size at birth
         $this->_taille = mt_rand(42, 57);
+
+        //  Randomization of the gender of the personnage
         $hazard =  mt_rand(0, 100);
         if ($hazard < 50)  {
             $_homme = true;
@@ -42,6 +68,8 @@ class Personnage extends BddHuman
             $_homme = false;
         }
         $this->_homme = $_homme;
+
+        //  Randomization of the location of the personnage
         $this->_emplacement = mt_rand(1, 100);
     }
 
@@ -98,7 +126,7 @@ class Personnage extends BddHuman
      */
     public function getHomme()
     {
-        return $this->homme;
+        return $this->_homme;
     }
 
     /**
@@ -129,8 +157,6 @@ class Personnage extends BddHuman
         $this->_emplacement = $emplacement;
     }
 
-
-
     public function enregistrerPerso()
     {
         $enregistre = $this->_bdd->prepare("INSERT INTO personnage(lifespan, growth, birthsize, men, location) VALUES (?, ?, ?, ?, ?);");
@@ -140,6 +166,8 @@ class Personnage extends BddHuman
         $enregistre->bindParam(4, $this->_homme, PDO::PARAM_INT);
         $enregistre->bindParam(5, $this->_emplacement, PDO::PARAM_INT);
         $enregistre->execute();
+
+        return print_r($enregistre->execute());
     }
 
     public function enregistrerPartiePerso()
@@ -152,8 +180,9 @@ class Personnage extends BddHuman
         $liaison->bindParam(1, $this->_partie);
         $liaison->bindParam(2, $resultIdPerso[0]);
         $liaison->execute();
+
+        return print_r($liaison->execute());
+
     }
 
 }
-// assertEmpty , assertEquals instancier object avec methode setUp
-// protected $personnage

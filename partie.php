@@ -53,7 +53,7 @@ class Partie extends BddHuman
         $recupStatsPartie->bindParam(1, $this->_idPartie);
         $recupStatsPartie->execute();
         $result = $recupStatsPartie->fetch();
-        return $result;
+        return var_dump($result);
     }
 
 }

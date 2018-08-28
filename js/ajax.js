@@ -7,3 +7,14 @@
 //     success: ,
 //     error: ,
 //   });
+
+$.ajax ({
+    type: "POST",
+    url: "",
+    data: {},
+    dataType: "json",
+    contentType: "application/json",
+    timeout: 30000,
+    success: {},
+    error: {}
+});
