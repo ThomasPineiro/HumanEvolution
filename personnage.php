@@ -32,7 +32,8 @@ class Personnage extends BddHuman
         $resultIdPartie = $idPartie->fetch();
         $this->_partie = $resultIdPartie[0];
         $this->_espvie = mt_rand(0, 100);
-        $this->_croissance = mt_rand(0.8, 1.2);
+        $_croissance = mt_rand(80, 120)/100;
+        $this->_croissance = $_croissance;
         $this->_taille = mt_rand(42, 57);
         $hazard =  mt_rand(0, 100);
         if ($hazard < 50)  {
@@ -136,7 +137,7 @@ class Personnage extends BddHuman
         $enregistre->bindParam(1, $this->_espvie, PDO::PARAM_INT);
         $enregistre->bindParam(2, $this->_croissance, PDO::PARAM_STR);
         $enregistre->bindParam(3, $this->_taille, PDO::PARAM_STR);
-        $enregistre->bindParam(4, $this->_homme, PDO::PARAM_STR);
+        $enregistre->bindParam(4, $this->_homme, PDO::PARAM_INT);
         $enregistre->bindParam(5, $this->_emplacement, PDO::PARAM_INT);
         $enregistre->execute();
     }
