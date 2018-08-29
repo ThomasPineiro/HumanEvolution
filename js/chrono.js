@@ -30,7 +30,7 @@ $(document).ready(function () {
         all = [age, taille, sexe, growth, lifeSpan];
         tabPersonnage.push(all);   
     }
-    console.log(tabPersonnage);
+    // console.log(tabPersonnage);
 });
 
 tabPersonnage = [];
