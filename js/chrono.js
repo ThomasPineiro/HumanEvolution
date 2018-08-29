@@ -1,37 +1,38 @@
-i = prompt ("Choose test number")
+i = prompt ("Choose test number");
 
-$(document).ready(function () {
+$("#test").click(function ()
+{
+    $.ajax ({
+        type: "POST",
+        url: "../partieAjax.php",
+        data: 'nbPerso='+ i,
+        dataType: "json",
+        timeout: 3000,
+        success:  function(data) {
+            for (n = 0; n < i; n++) {
+                creationCellule(n);
+
+                $(".taille" + n).html(data[n][2] + ' cm');
+                $(".sexe" + n).html(data[n][3]);
+                var age = parseInt($(".age" + n).html());
+                var taille = parseFloat($(".taille" + n).html());
+                var sexe = $(".sexe" + n).html().substring(0,5);
+
+                all = [age, taille, sexe, data[n][1], data[n][0]];
+                tabPersonnage.push(all);
+            }
+        },
+        error:  function() {
+            console.log();
+        },
+    });
+});
+
 
     function creationCellule(n) {
         // Ajoute une div avec le personnage et toutes ses informations
-        $('.wrapper').append("<div class='grid_col'><div class='row'><img class='img img"+ n +"' src='img/bebe.svg'/></div><div class='row responsive_row'><span class='sexe"+ n +"'></span><span class='age"+ n +"'>0 ans /</span><span class='taille"+ n +"'></span></div></div>");
-
-        lifeSpan = Math.floor(Math.random()*100);
-    
-        birthSize = (Math.random() * (57 - 42) + 42).toFixed(1);
-    
-        growth = Math.random() * (1.2 - 0.8) + 0.8;
-
-        var sexArray = ['Homme /','Femme /'];
-
-        genre = sexArray[Math.floor(Math.random()*2)];
+        $('.wrapper').append("<div class='grid_col'><div class='row'><img class='img img"+ n +"' src='img/bebe.svg'/></div><div class='row responsive_row'><span class='sexe"+ n +"'></span><span>&nbsp;/&nbsp;</span><span class='age"+ n +"'>0</span><span>&nbsp;ans&nbsp;/&nbsp;</span><span class='taille"+ n +"'></span></div></div>");
     }
-
-    // Boucle for pour lancer la fonction 9 fois, n étant une variable permettant de vérifier à combien de case nous en sommes.
-    for (n = 0; n < i; n++) {
-        creationCellule(n); 
-
-        $(".taille" + n).html(birthSize + ' cm');
-        $(".sexe" + n).html(genre);
-        var age = parseInt($(".age" + n).html());
-        var taille = parseFloat($(".taille" + n).html());
-        var sexe = $(".sexe" + n).html().substring(0,5);
-
-        all = [age, taille, sexe, growth, lifeSpan];
-        tabPersonnage.push(all);   
-    }
-    console.log(tabPersonnage);
-});
 
 tabPersonnage = [];
 

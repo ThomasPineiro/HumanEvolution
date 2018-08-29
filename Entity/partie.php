@@ -5,7 +5,7 @@
  * Date: 21/08/2018
  * Time: 14:17
  */
-include 'bddHuman.php';
+include_once 'bddHuman.php';
 
 class Partie extends BddHuman
 {
@@ -27,6 +27,7 @@ class Partie extends BddHuman
         $lookForId->execute();
         $resultat = $lookForId->fetch();
         $this->_idPartie = $resultat[0];
+
     }
 
     /**
@@ -53,7 +54,6 @@ class Partie extends BddHuman
         $recupStatsPartie->bindParam(1, $this->_idPartie);
         $recupStatsPartie->execute();
         $result = $recupStatsPartie->fetch();
-        return var_dump($result);
     }
 
 }

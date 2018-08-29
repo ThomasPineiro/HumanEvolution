@@ -6,7 +6,7 @@
  * Time: 11:39
  */
 
-include 'partie.php';
+include_once 'bddHuman.php';
 
 class Personnage extends BddHuman
 {
@@ -38,7 +38,7 @@ class Personnage extends BddHuman
     /**
      * Personnage constructor.
      */
-    public function __construct()
+    public function __construct($emplacement)
     {
         Parent::__construct();
 
@@ -61,16 +61,10 @@ class Personnage extends BddHuman
         $this->_taille = mt_rand(42, 57);
 
         //  Randomization of the gender of the personnage
-        $hazard =  mt_rand(0, 100);
-        if ($hazard < 50)  {
-            $_homme = true;
-        } else {
-            $_homme = false;
-        }
-        $this->_homme = $_homme;
+        $this->_homme = mt_rand(1, 100);
 
         //  Randomization of the location of the personnage
-        $this->_emplacement = mt_rand(1, 100);
+        $this->_emplacement = $emplacement;
     }
 
     /**
@@ -132,12 +126,12 @@ class Personnage extends BddHuman
     /**
      * @param mixed $homme
      */
-    public function setHomme($homme)
+    public function setHomme()
     {
         if ($this->_homme < 50) {
-            $this->_homme = "Femme";
+            $this->_homme = TRUE;
         } else {
-            $this->_homme = "Homme";
+            $this->_homme = FALSE;
         }
     }
 
@@ -159,15 +153,42 @@ class Personnage extends BddHuman
 
     public function enregistrerPerso()
     {
-        $enregistre = $this->_bdd->prepare("INSERT INTO personnage(lifespan, growth, birthsize, men, location) VALUES (?, ?, ?, ?, ?);");
-        $enregistre->bindParam(1, $this->_espvie, PDO::PARAM_INT);
-        $enregistre->bindParam(2, $this->_croissance, PDO::PARAM_STR);
-        $enregistre->bindParam(3, $this->_taille, PDO::PARAM_STR);
-        $enregistre->bindParam(4, $this->_homme, PDO::PARAM_INT);
-        $enregistre->bindParam(5, $this->_emplacement, PDO::PARAM_INT);
-        $enregistre->execute();
+        $verif = $this->_bdd->prepare("SELECT * FROM personnage WHERE lifespan = ? AND growth = ? AND birthsize = ? AND men = ? AND location = ?");
+        $verif->bindValue(1, $this->_espvie);
+        $verif->bindValue(2, $this->_croissance);
+        $verif->bindValue(3, $this->_taille);
+        $verif->bindValue(4, $this->_homme);
+        $verif->bindValue(5, $this->_emplacement);
+        $verif->execute();
+        $resultVerif = $verif->fetch();
 
-        return print_r($enregistre->execute());
+        if ($resultVerif != NULL) {
+
+        } else {
+            $this->setHomme();
+            $enregistre = $this->_bdd->prepare("INSERT INTO personnage(lifespan, growth, birthsize, men, location) VALUES (?, ?, ?, ?, ?);");
+            $enregistre->bindParam(1, $this->_espvie, PDO::PARAM_INT);
+            $enregistre->bindParam(2, $this->_croissance, PDO::PARAM_STR);
+            $enregistre->bindParam(3, $this->_taille, PDO::PARAM_STR);
+            $enregistre->bindParam(4, $this->_homme, PDO::PARAM_INT);
+            $enregistre->bindParam(5, $this->_emplacement, PDO::PARAM_INT);
+            $enregistre->execute();
+
+            if($this->_homme == 0) {
+                $sexe = "Femme";
+            } else {
+                $sexe = "Homme";
+            }
+
+            $perso = array();
+            array_push($perso, $this->_espvie, $this->_croissance, $this->_taille, $sexe, $this->_emplacement);
+
+            return $perso;
+
+        }
+
+
+
     }
 
     public function enregistrerPartiePerso()
@@ -180,9 +201,6 @@ class Personnage extends BddHuman
         $liaison->bindParam(1, $this->_partie);
         $liaison->bindParam(2, $resultIdPerso[0]);
         $liaison->execute();
-
-        return print_r($liaison->execute());
-
     }
 
 }

@@ -7,9 +7,9 @@
  */
 class BddHuman
 {
-    const DSN = 'pgsql:host=postgresql-simplonpamiers-ariege.alwaysdata.net;dbname=simplonpamiers-ariege_human_evol';
-    const USER = 'simplonpamiers-ariege_thomas';
-    const PASS = 'Elpinus09';
+    const DSN = 'pgsql:host=localhost;dbname=human_bdd';
+    const USER = 'admin';
+    const PASS = 'admin';
     protected $_bdd;
 
     /**
@@ -18,10 +18,9 @@ class BddHuman
      */
     public function __construct()
     {
-        // $this->_bdd = new PDO('pg_connect:host=postgresql-marjorieandrieux.alwaysdata.net;dbname=marjorieandrieux_humanproject;charset=utf8', 'marjorieandrieux_pilou', 'ttbitn32167');
         try {
+            // Use the self keyword to access static properties, constants and methods.
             $this->_bdd = new PDO(SELF::DSN, SELF::USER, SELF::PASS);
-            // echo 'Connexion OK';
         } catch (PDOException $e) {
             echo 'Connexion échouée : ' . $e->getMessage();
         }
@@ -48,4 +47,3 @@ class BddHuman
 
     }
 }
-new bddHuman();
