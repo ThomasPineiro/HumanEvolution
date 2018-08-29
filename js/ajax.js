@@ -10,11 +10,13 @@
 
 $.ajax ({
     type: "POST",
-    url: "",
-    data: {},
+    url: "ajax.php",
+    // data: {},
     dataType: "json",
     contentType: "application/json",
     timeout: 30000,
-    success: {},
+    success: function(showResults){
+        $("#table").html(showResults);
+    },
     error: {}
 });
